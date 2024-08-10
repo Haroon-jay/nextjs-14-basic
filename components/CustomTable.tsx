@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import ReloadButton from "./users/ReloadButton";
+import ReloadButton from "@/components/ReloadButton";
 
 interface Column<T> {
   key: string;
@@ -24,6 +24,7 @@ interface Props<T> {
   data: T[];
   title: string;
   showReloadButton?: boolean;
+  cardWrapperProps?: CardWrapperProps;
 }
 
 const CustomTable = <T extends object & { id?: number | string }>({
@@ -31,56 +32,58 @@ const CustomTable = <T extends object & { id?: number | string }>({
   data,
   title,
   showReloadButton = true,
+  cardWrapperProps = {},
 }: Props<T>) => {
   return (
-    <CardWrapper>
-      <Table>
-        <TableCaption>{title}</TableCaption>
-        <TableHeader>
-          <TableRow>
-            {columns.map((column, i) => (
-              <TableHead
-                key={column.key}
-                className={cn({
-                  "w-[100px]": i === 0,
-                  "text-right": i === columns.length - 1,
-                })}
-              >
-                {column.label}
-              </TableHead>
-            ))}
-          </TableRow>
-          {/* </TableRow> */}
-        </TableHeader>
-        <TableBody>
-          {data.map((row, i) => (
-            <TableRow key={row.id}>
+    <CardWrapper {...cardWrapperProps}>
+      <div className="overflow-x-auto max-w-[90vw]">
+        <Table className="min-w-full">
+          <TableCaption>{title}</TableCaption>
+          <TableHeader>
+            <TableRow>
               {columns.map((column, i) => (
-                <TableCell
-                  key={column.key || i}
+                <TableHead
+                  key={column.key}
                   className={cn({
-                    "font-medium": i === 0,
+                    "w-[100px]": i === 0,
                     "text-right": i === columns.length - 1,
                   })}
                 >
-                  {column.customCell
-                    ? column.customCell(row, i)
-                    : (row[column.key as keyof T] as React.ReactNode)}
-                </TableCell>
+                  {column.label}
+                </TableHead>
               ))}
             </TableRow>
-          ))}
-        </TableBody>
-        {showReloadButton && (
-          <TableFooter>
-            <TableRow>
-              <TableCell colSpan={4} className="text-right">
-                <ReloadButton />
-              </TableCell>
-            </TableRow>
-          </TableFooter>
-        )}
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {data.map((row, i) => (
+              <TableRow key={row.id}>
+                {columns.map((column, i) => (
+                  <TableCell
+                    key={column.key || i}
+                    className={cn({
+                      "font-medium": i === 0,
+                      "text-right": i === columns.length - 1,
+                    })}
+                  >
+                    {column.customCell
+                      ? column.customCell(row, i)
+                      : (row[column.key as keyof T] as React.ReactNode)}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+          {showReloadButton && (
+            <TableFooter>
+              <TableRow>
+                <TableCell colSpan={columns.length} className="text-right">
+                  <ReloadButton />
+                </TableCell>
+              </TableRow>
+            </TableFooter>
+          )}
+        </Table>
+      </div>
     </CardWrapper>
   );
 };

@@ -1,12 +1,13 @@
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-interface CardWrapperProps {
-  children: React.ReactNode;
-}
-
-const CardWrapper = ({ children }: CardWrapperProps) => {
+const CardWrapper = ({ children, title }: CardWrapperProps) => {
   return (
     <Card className="shadow-md mt-1">
+      {title && (
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+        </CardHeader>
+      )}
       <CardContent className="pt-1">{children}</CardContent>
     </Card>
   );

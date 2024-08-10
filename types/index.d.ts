@@ -8,3 +8,8 @@ declare type User = {
   website: string;
   company: Record<string, any>;
 };
+
+declare interface CardWrapperProps {
+  children?: React.ReactNode;
+  title?: string;
+}
